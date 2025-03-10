@@ -7,13 +7,16 @@ db.version(1).stores({
   todos: '++id,task,completed',
 })
 
-
 const { todos } = db
 
 const App = () => {
   const allItems = useLiveQuery(() => todos.toArray(), [])
 
   const completedItems = allItems?.filter((item) => item.completed === true)
+
+
+  const totalTasks = allItems?.length || 0
+  const completedTasks = completedItems?.length || 0
 
   const addTask = async (event) => {
     event.preventDefault()
@@ -42,6 +45,11 @@ const App = () => {
           Add
         </button>
       </form>
+
+      <div className="task-info">
+        <p>Tasks completed: {completedTasks}/{totalTasks}</p>
+        <p>Progress: {totalTasks > 0 ? `${Math.round((completedTasks / totalTasks) * 100)}%` : '0%'}</p>
+      </div>
 
       <div className="card white darken-1">
         <div className="card-content">
